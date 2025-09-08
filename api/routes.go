@@ -6,7 +6,7 @@ import (
 )
 
 func RegisterRoutes(db *sql.DB) {
-
-	http.HandleFunc("/create", Createhandler(db))
+	h := NewHandler(db)
+	http.HandleFunc("/create", h.Createhandler(db))
 
 }

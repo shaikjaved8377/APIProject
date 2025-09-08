@@ -1,12 +1,27 @@
 package api
 
 import (
-	"database/sql"
-	"net/http"
-
 	"Project/dataservice"
+	"Project/model"
+	"database/sql"
 )
 
-func CreateBookLogic(db *sql.DB, w http.ResponseWriter, r *http.Request) error {
-	return dataservice.CreateBook(db, w, r)
+type IbizLogic interface {
+	CreateBookLogic(book model.Book) error
+}
+
+type bizlogic struct {
+	DB *sql.DB
+}
+
+func NewBizLogic(db *sql.DB) *bizlogic {
+	return &bizlogic{DB: db}
+}
+
+func (bl *bizlogic) CreateBookLogic(book model.Book) error {
+	//validations
+	if err := dataservice.CreateBook(bl.DB, book); err != nil {
+		return err
+	}
+	return nil
 }

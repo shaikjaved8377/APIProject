@@ -1,28 +1,16 @@
 package dataservice
 
 import (
+	"Project/model"
 	"database/sql"
-	"encoding/json"
-	"net/http"
 )
 
-type Book struct {
-	Title  string `json:"title"`
-	Author string `json:"author"`
-	Year   int    `json:"year"`
-}
+func CreateBook(db *sql.DB, book model.Book) error {
 
-func CreateBook(db *sql.DB, w http.ResponseWriter, r *http.Request) error {
-	var book Book
-
-	if err := json.NewDecoder(r.Body).Decode(&book); err != nil {
-		return err
-	}
 	query := "INSERT INTO books(title, author, year) VALUES (?, ?, ?)"
 	_, err := db.Exec(query, book.Title, book.Author, book.Year)
 	if err != nil {
 		return err
 	}
-	w.WriteHeader(http.StatusCreated)
-	return json.NewEncoder(w).Encode(book)
+	return nil
 }
